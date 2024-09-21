@@ -2,9 +2,11 @@ import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     MatCardModule,
     MatIconModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatInputModule,
+    ReactiveFormsModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
@@ -43,6 +47,17 @@ export class LoginComponent {
   hideConfirmPassword = signal(true);
   isSignUpMode = signal(false);
 
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: (''),
+      password: (''),
+      confirmPassword: (''),
+      level: (1)
+    })
+  }
+
   clickEvent(event: MouseEvent, hidePassword: boolean): void {
     if(hidePassword) {
       this.hidePassword.set(!this.hidePassword());
@@ -58,5 +73,9 @@ export class LoginComponent {
 
   onLogin(): void {
     this.isSignUpMode.set(false);
+  }
+
+  submit(): void {
+    console.log('[submit]', this.form.value);
   }
 }

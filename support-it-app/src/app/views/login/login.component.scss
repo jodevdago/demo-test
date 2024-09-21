@@ -1,3 +1,12 @@
+.login {
+  background-color: #70707d;
+}
+
+.subTitle {
+  font-size: small;
+  font-weight: 200;
+  margin-bottom: 18px;
+}
 
 mat-card {
   padding: 24px;
@@ -12,7 +21,7 @@ mat-form-field {
 }
 
 mat-card-footer {
-  margin: auto;
   font-size: small;
+  font-weight: 200;
 }
 

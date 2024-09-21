@@ -1,70 +1,97 @@
-<div
-  class="flex justify-center items-center h-full"
-  style="background-color: rgb(112, 112, 125)"
->
+<div class="login flex justify-center items-center h-full">
   <mat-card [@expandCollapse]="isSignUpMode() ? 'signup' : 'login'">
-    <mat-card-content>
-      <div class="flex flex-col justify-center text-center">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-card-content>
+        <div class="flex flex-col justify-center text-center">
           <mat-icon class="mat-18 mx-auto">settings</mat-icon>
           <h5>IT Support</h5>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword() ? 'password' : 'text'"/>
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="clickEvent($event, true)"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hidePassword()"
-          >
-            <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
-      @if (isSignUpMode()) {
+          <p class="subTitle">
+            @if (isSignUpMode()) {
+              Create your account
+            } @else {
+              Enter your email and password below
+            }
+           </p>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clickEvent($event, true)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword()"
+              type="button"
+            >
+              <mat-icon>{{
+                hidePassword() ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        @if (isSignUpMode()) {
         <div>
           <mat-form-field>
             <mat-label>Confirm password</mat-label>
-            <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'"/>
+            <input
+              matInput
+              [type]="hideConfirmPassword() ? 'password' : 'text'"
+              formControlName="confirmPassword"
+            />
             <button
               mat-icon-button
               matSuffix
               (click)="clickEvent($event, false)"
               [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="hideConfirmPassword()"
+              type="button"
             >
-              <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+              <mat-icon>{{
+                hideConfirmPassword() ? "visibility_off" : "visibility"
+              }}</mat-icon>
             </button>
           </mat-form-field>
         </div>
-      }
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-flat-button class="w-full">
-        @if (isSignUpMode()) {
-          Sign up
-        } @else {
-          Log in
+        <div>
+          <mat-form-field>
+            <mat-select formControlName="level">
+              <mat-option value="1">Level 1</mat-option>
+              <mat-option value="2">Level 2</mat-option>
+              <mat-option value="2">Level 3</mat-option>
+            </mat-select>
+            <mat-label>IT Support Level</mat-label>
+          </mat-form-field>
+        </div>
         }
-      </button>
-    </mat-card-actions>
-    <mat-card-footer>
-      @if (isSignUpMode()) {
-        Already have an account?
-        <a class="underline text-blue-800 cursor-pointer" (click)="onLogin()">Log in</a>
-      } @else {
-        Don't have an account?
-        <a class="underline text-blue-800 cursor-pointer" (click)="onSignUp()">Sign up</a>
-      }
-    </mat-card-footer>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button class="w-full" type="submit">
+          @if (isSignUpMode()) { Sign up } @else { Log in }
+        </button>
+      </mat-card-actions>
+      <mat-card-footer class="flex justify-center">
+        @if (isSignUpMode()) { Already have an account ?
+        <a class="underline text-blue-800 cursor-pointer ms-1" (click)="onLogin()"
+          >Log in</a
+        >
+        } @else { Don't have an account ?
+        <a class="underline text-blue-800 cursor-pointer ms-1" (click)="onSignUp()"
+          >Sign up</a
+        >
+        }
+      </mat-card-footer>
+    </form>
   </mat-card>
 </div>
-
