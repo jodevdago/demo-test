@@ -1,0 +1,18 @@
+
+mat-card {
+  padding: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+mat-card-footer {
+  margin: auto;
+  font-size: small;
+}
+
