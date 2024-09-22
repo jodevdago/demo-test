@@ -53,7 +53,7 @@ export class TicketsComponent implements OnInit, OnDestroy {
     'title',
     'priority',
     'assigned',
-    'createdAt'
+    'createdOn'
   ];
   dataSource!: MatTableDataSource<Ticket[]>;
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];

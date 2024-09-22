@@ -26,7 +26,7 @@
     @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{ column }}">
       <th [hidden]="column == 'id'" mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ column }}
+        {{ column == 'createdOn' ? 'Created on' : column }}
       </th>
       @if (column == 'assigned') {
       <td mat-cell *matCellDef="let element">
@@ -36,7 +36,7 @@
         </button>
       </td>
       }
-      @else if (column == 'createdAt') {
+      @else if (column == 'createdOn') {
         <td mat-cell *matCellDef="let element">
           {{ element[column] | firestoreTimestampToDate | date: 'medium' }}
         </td>
