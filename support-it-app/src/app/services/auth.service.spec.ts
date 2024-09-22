@@ -8,7 +8,7 @@ import {
   signOut,
   UserCredential,
 } from 'firebase/auth';
-import { Registration } from '../types/registration';
+import { User } from '../types/user';
 import { doc, setDoc } from '@angular/fire/firestore';
 
 jest.mock('firebase/auth');
@@ -37,7 +37,7 @@ describe('AuthService', () => {
     const mockUserCredential: Partial<UserCredential> = {
       user: { uid: '123', email: 'test@example.com' } as any,
     };
-    const mockRegistration: Registration = {
+    const mockRegistration: User = {
       auth: false,
       role: 1,
       level: 1,

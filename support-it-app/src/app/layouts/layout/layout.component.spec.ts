@@ -41,4 +41,12 @@ describe('LayoutComponent', () => {
     expect(unsubscribeSpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should toggle isExpanded state', () => {
+    expect(component.isExpanded).toBeTruthy();
+    component.toggleMenu();
+    expect(component.isExpanded).toBeFalsy();
+    component.toggleMenu();
+    expect(component.isExpanded).toBeTruthy();
+  });
 });
