@@ -1,0 +1,32 @@
+<section [style.height]="'100vh'" [style.backgroundColor]="'#D7E3FF'">
+  <div class="toggle">
+    <mat-icon (click)="toggleMenu.emit(null)">
+      {{ isExpanded ? "keyboard_backspace" : "dehaze" }}
+    </mat-icon>
+  </div>
+
+  @for (route of routeLinks; track $index) {
+    <mat-list class="nav">
+      <a
+        mat-list-item
+        routerLinkActive="active-link"
+        class="hover"
+        routerLink="{{ route.link }}"
+      >
+        <mat-icon
+          mat-list-icon
+          [matTooltip]="!isExpanded ? route.name : null"
+          matTooltipPosition="right"
+        >
+          {{ route.icon }}</mat-icon
+        >
+        @if (isExpanded) {
+          <span matLine class="ms-4 mb-3">{{ route.name }}</span>
+        }
+      </a>
+    </mat-list>
+  }
+
+</section>
+
+

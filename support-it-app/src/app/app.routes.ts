@@ -3,6 +3,7 @@ import { LoginComponent } from './views/login/login.component';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './layouts/unauthorized/unauthorized.component';
+import { UsersComponent } from './views/users/users.component';
 
 export const routes: Routes = [
   {
@@ -20,7 +21,17 @@ export const routes: Routes = [
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'users',
+        loadComponent: () => import('./views/users/users.component').then(m => m.UsersComponent)
+      },
+      {
+        path: '',
+        loadComponent: () => import('./views/users/users.component').then(m => m.UsersComponent)
+      }
+    ]
   },
   {
     path: '**',

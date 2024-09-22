@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
-import { Registration } from '../types/registration';
+import { User } from '../types/user';
 import { from, Observable } from 'rxjs';
 
 @Injectable({
@@ -51,7 +51,7 @@ export class AuthService {
     return from(logout);
   }
 
-  private saveUser(userId: string, data: Registration) {
+  private saveUser(userId: string, data: User) {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return setDoc(userDocRef, data, { merge: true });
   }
