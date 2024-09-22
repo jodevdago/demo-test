@@ -29,7 +29,6 @@ export const AuthGuard = () => {
             })
           )
           .subscribe((authValid) => {
-            console.log(authValid);
             if (authValid) {
               observer.next(true);
             } else {
