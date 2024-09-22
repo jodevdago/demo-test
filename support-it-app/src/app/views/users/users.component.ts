@@ -21,7 +21,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatInputModule,
     MatIconModule,
     MatTableModule,
-    MatTableModule,
     MatSortModule,
     MatPaginatorModule,
     MatSlideToggleModule,

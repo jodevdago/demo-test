@@ -16,7 +16,7 @@ export class SidenavComponent {
   @Output() toggleMenu = new EventEmitter();
 
   routeLinks = [
-    { link: './', name: 'Tickets', icon: 'view_agenda' },
+    { link: './tickets', name: 'Tickets', icon: 'view_agenda' },
     { link: './users', name: 'Users', icon: 'supervised_user_circle' },
   ];
 }
