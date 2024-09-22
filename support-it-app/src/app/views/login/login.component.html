@@ -1,1 +1,166 @@
-<p>login works!</p>
+<div class="login flex justify-center items-center h-full">
+  <mat-card [@expandCollapse]="isSignUpMode() ? 'signup' : 'login'">
+    @if (!isSignUpMode()) {
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <mat-card-content>
+        <div class="flex flex-col justify-center text-center">
+          <mat-icon class="mat-18 mx-auto">settings</mat-icon>
+          <h5>IT Support</h5>
+          @if (!isSignUpMode()) {
+          <p class="subTitle">Enter your email and password below</p>
+          }
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clickEvent($event, true)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword()"
+              type="button"
+            >
+              <mat-icon>{{
+                hidePassword() ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        @if (errorLoginMessage) {
+          <mat-error class="text-center">
+            {{ errorLoginMessage }}
+          </mat-error>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          [disabled]="!loginForm.valid"
+          mat-flat-button
+          class="w-full"
+          type="submit"
+        >
+          Log in
+        </button>
+      </mat-card-actions>
+      <mat-card-footer class="flex justify-center">
+        Don't have an account ?
+        <a
+          class="underline text-blue-800 cursor-pointer ms-1"
+          (click)="onSignUp()"
+          >Sign up</a
+        >
+      </mat-card-footer>
+    </form>
+    } @else {
+    <form [formGroup]="registrationForm" (ngSubmit)="registration()">
+      <mat-card-content>
+        <div class="flex flex-col justify-center text-center">
+          <mat-icon class="mat-18 mx-auto">settings</mat-icon>
+          <h5>IT Support</h5>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullname" />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clickEvent($event, true)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword()"
+              type="button"
+            >
+              <mat-icon>{{
+                hidePassword() ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Confirm password</mat-label>
+            <input
+              matInput
+              [type]="hideConfirmPassword() ? 'password' : 'text'"
+              formControlName="confirmPassword"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="clickEvent($event, false)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hideConfirmPassword()"
+              type="button"
+            >
+              <mat-icon>{{
+                hideConfirmPassword() ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-select formControlName="level">
+              <mat-option selected value="1">Level 1</mat-option>
+              <mat-option value="2">Level 2</mat-option>
+              <mat-option value="2">Level 3</mat-option>
+            </mat-select>
+            <mat-label>IT Support Level</mat-label>
+          </mat-form-field>
+        </div>
+        @if (errorRegistrationMessage) {
+          <mat-error class="text-center">
+            {{ errorRegistrationMessage }}
+          </mat-error>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          [disabled]="!registrationForm.valid"
+          mat-flat-button
+          class="w-full"
+          type="submit"
+        >
+          Sign up
+        </button>
+      </mat-card-actions>
+      <mat-card-footer class="flex justify-center">
+        Already have an account ?
+        <a
+          class="underline text-blue-800 cursor-pointer ms-1"
+          (click)="onLogin()"
+          >Log in</a
+        >
+      </mat-card-footer>
+    </form>
+    }
+  </mat-card>
+</div>

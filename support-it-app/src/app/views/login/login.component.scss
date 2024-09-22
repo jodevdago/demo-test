@@ -1,0 +1,27 @@
+.login {
+  background-color: #70707d;
+}
+
+.subTitle {
+  font-size: small;
+  font-weight: 200;
+  margin-bottom: 18px;
+}
+
+mat-card {
+  padding: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+mat-card-footer, mat-error {
+  font-size: small;
+  font-weight: 200;
+}
+
