@@ -1,12 +1,29 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Subject, takeUntil, timer } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,48 +35,74 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
   ],
   animations: [
     trigger('expandCollapse', [
-      state('login', style({
-        height: '*',
-        opacity: 1
-      })),
-      state('signup', style({
-        height: '*',
-        opacity: 1
-      })),
+      state(
+        'login',
+        style({
+          height: '*',
+          opacity: 1,
+        })
+      ),
+      state(
+        'signup',
+        style({
+          height: '*',
+          opacity: 1,
+        })
+      ),
       transition('login <=> signup', [
         style({ height: 0, opacity: 0 }),
-        animate('750ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ])
-    ])
+        animate('750ms ease-in-out', style({ height: '*', opacity: 1 })),
+      ]),
+    ]),
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   hidePassword = signal(true);
   hideConfirmPassword = signal(true);
   isSignUpMode = signal(false);
 
-  form: FormGroup;
+  registrationForm: FormGroup;
+  loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      email: (''),
-      password: (''),
-      confirmPassword: (''),
-      level: (1)
-    })
+  errorRegistrationMessage: string | null = null;
+  errorLoginMessage: string | null = null;
+
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.registrationForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+      level: [1, Validators.required],
+      fullname: ['', Validators.required],
+    });
+
+    this.loginForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   clickEvent(event: MouseEvent, hidePassword: boolean): void {
-    if(hidePassword) {
+    if (hidePassword) {
       this.hidePassword.set(!this.hidePassword());
     } else {
       this.hideConfirmPassword.set(!this.hideConfirmPassword());
@@ -68,14 +111,77 @@ export class LoginComponent {
   }
 
   onSignUp(): void {
+    this.registrationForm.reset({
+      email: '',
+      password: '',
+      confirmPassword: '',
+      level: null,
+      fullname: '',
+    });
+    this.loginForm.reset({
+      email: null,
+      password: null,
+    });
     this.isSignUpMode.set(true);
   }
 
   onLogin(): void {
+    this.registrationForm.reset({
+      email: '',
+      password: '',
+      confirmPassword: '',
+      level: null,
+      fullname: '',
+    });
+    this.loginForm.reset({
+      email: null,
+      password: null,
+    });
     this.isSignUpMode.set(false);
   }
 
-  submit(): void {
-    console.log('[submit]', this.form.value);
+  registration(): void {
+    this.authService
+      .register(
+        this.registrationForm.get('fullname')?.value,
+        this.registrationForm.get('email')?.value,
+        this.registrationForm.get('password')?.value,
+        this.registrationForm.get('level')?.value
+      )
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: () => {
+          this.onLogin();
+        },
+        error: (err) => {
+          this.errorRegistrationMessage = err.code;
+          timer(3000)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              this.errorRegistrationMessage = '';
+            });
+        },
+      });
+  }
+
+  login(): void {
+    this.authService.login(
+      this.loginForm.get('email')?.value,
+      this.loginForm.get('password')?.value
+    ).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe({
+      next: () => {
+        this.router.navigate(['./layout']);
+      },
+      error: (err) => {
+        this.errorLoginMessage = err.code;
+        timer(3000)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(() => {
+            this.errorLoginMessage = '';
+          });
+      },
+    });
   }
 }
