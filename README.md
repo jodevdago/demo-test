@@ -18,7 +18,7 @@ Before running the app locally, please check the version of Angular in `package.
 
 3. Build app :
    ```bash
-   ng run build
+   npm run build
 
 ## Admin Accounts
 Only two admin accounts exist in the app. You can log in with the following credentials:
