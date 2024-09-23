@@ -1,0 +1,73 @@
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.btn-level {
+  cursor: default;
+}
+
+.btn-level:hover {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.btn-level {
+  font-size: small;
+  height: 25px;
+
+  &.low {
+    background-color: #b5ffc9;
+    color: #065b00;
+  }
+
+  &.medium {
+    background-color: #ffe4b5;
+    color: #5b2300;
+  }
+
+  &.high {
+    background-color: #ffb5b5;
+    color: #ff0707;
+  }
+
+  &.closed {
+    background-color: #ffb5b5;
+    color: #ff0707;
+  }
+
+  &.pending {
+    background-color: #b5e5ff;
+    color: #13227d;
+  }
+
+  &.inprogress {
+    background-color: #e8ffb5;
+    color: #657900;
+  }
+
+  &.finished {
+    background-color: #b5ffc9;
+    color: #065b00;
+  }
+
+}

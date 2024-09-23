@@ -1,9 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Subject } from 'rxjs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { SidenavComponent } from '../sidenav/sidenav.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-layout',
@@ -16,21 +17,8 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
-export class LayoutComponent implements OnDestroy {
+export class LayoutComponent {
   isExpanded = true;
-
-  private unsubscribe$ = new Subject<void>();
-
-  constructor(private authService: AuthService) {}
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  logout(): void {
-    this.authService.logout().pipe;
-  }
 
   toggleMenu(): void {
     this.isExpanded = !this.isExpanded;

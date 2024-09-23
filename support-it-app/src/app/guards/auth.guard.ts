@@ -3,11 +3,13 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { catchError, from, map, Observable, of } from 'rxjs';
+import { UserService } from '../services/user.service';
 
 export const AuthGuard = () => {
   const auth = inject(Auth);
   const firestore = inject(Firestore);
   const router = inject(Router);
+  const userService = inject(UserService);
 
   return new Observable<boolean>((observer) => {
     onAuthStateChanged(auth, (user) => {
@@ -18,6 +20,7 @@ export const AuthGuard = () => {
             map((userDoc) => {
               if (userDoc.exists()) {
                 const userData = userDoc.data();
+                userService.userConnected$.next(userData);
                 return userData && userData['auth'] === true;
               } else {
                 return false;
@@ -29,7 +32,6 @@ export const AuthGuard = () => {
             })
           )
           .subscribe((authValid) => {
-            console.log(authValid);
             if (authValid) {
               observer.next(true);
             } else {

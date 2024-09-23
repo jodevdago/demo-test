@@ -1,12 +1,21 @@
-<section [style.height]="'100vh'" [style.backgroundColor]="'#D7E3FF'">
-  <div class="toggle">
-    <mat-icon (click)="toggleMenu.emit(null)">
+<section [style.height]="'100vh'" [style.backgroundColor]="'#D7E3FF'" class="relative">
+  <div class="toggle flex flex-col justify-center items-center">
+    <!-- <mat-icon (click)="toggleMenu.emit(null)">
       {{ isExpanded ? "keyboard_backspace" : "dehaze" }}
-    </mat-icon>
+    </mat-icon> -->
+    <div class="font-bold">{{ (user$ | async).fullname | titlecase }}</div>
+    <div>
+      <mat-icon>supervised_user_circle</mat-icon>
+    </div>
   </div>
 
+  <div class="px-3 mb-3">
+    <mat-divider></mat-divider>
+  </div>
+
+
   @for (route of routeLinks; track $index) {
-    <mat-list class="nav">
+    <mat-list class="nav m-0 p-0">
       <a
         mat-list-item
         routerLinkActive="active-link"
@@ -26,6 +35,30 @@
       </a>
     </mat-list>
   }
+
+  <div class="absolute bottom-0 start-0 end-0">
+    <div class="px-3">
+      <mat-divider></mat-divider>
+    </div>
+    <mat-list class="nav m-0 p-0">
+      <a
+        mat-list-item
+        class="hover"
+        (click)="logout()"
+      >
+        <mat-icon
+          mat-list-icon
+          [matTooltip]="!isExpanded ? 'logout' : null"
+          matTooltipPosition="right"
+        >
+        exit_to_app</mat-icon
+        >
+        @if (isExpanded) {
+          <span matLine class="ms-4 mb-3">Log out</span>
+        }
+      </a>
+    </mat-list>
+  </div>
 
 </section>
 
