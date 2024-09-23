@@ -1,81 +1,82 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { TicketsComponent } from './tickets.component';
 import { TicketsService } from '../../services/tickets.service';
-import { MatDialog } from '@angular/material/dialog';
-import { of } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '../../services/user.service';
+import { of, Subject } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { CreateTicketComponent } from './create-ticket/create-ticket.component';
 
 describe('TicketsComponent', () => {
   let component: TicketsComponent;
-  let fixture: ComponentFixture<TicketsComponent>;
-  let ticketsService: TicketsService;
-  let userService: UserService;
-  let dialog: MatDialog;
+  let ticketsService: jest.Mocked<TicketsService>;
+  let userService: jest.Mocked<UserService>;
+  let matDialog: jest.Mocked<MatDialog>;
 
   beforeEach(async () => {
+    // Mock services
     ticketsService = {
       getTickets: jest.fn(),
       deleteDocument: jest.fn(),
     } as unknown as jest.Mocked<TicketsService>;
 
-    const dialogMock = {
-      open: jest.fn(),
-    };
+    userService = {
+      userConnected$: of({ id: '123', name: 'Test User' }),
+    } as unknown as jest.Mocked<UserService>;
 
+    matDialog = {
+      open: jest.fn(),
+    } as unknown as jest.Mocked<MatDialog>;
+
+    // Configure TestBed
     await TestBed.configureTestingModule({
       imports: [TicketsComponent],
       providers: [
         { provide: TicketsService, useValue: ticketsService },
         { provide: UserService, useValue: userService },
-        { provide: MatDialog, useValue: dialogMock },
+        { provide: MatDialog, useValue: matDialog },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TicketsComponent);
+    // Create component instance
+    const fixture = TestBed.createComponent(TicketsComponent);
     component = fixture.componentInstance;
-    ticketsService = TestBed.inject(TicketsService);
-    userService = TestBed.inject(UserService);
-    dialog = TestBed.inject(MatDialog);
-
-    component.dataSource = new MatTableDataSource([
-      {
-        desc: 'eret',
-        priority: '1',
-        assigned: {
-          email: 'tantely.ramananarivo09@gmail.com',
-          auth: true,
-          level: 3,
-          fullname: 'tantely ramananarivo',
-          role: 1,
-          id: 'EVXLgwzwuVUUIHctMgleS3INOsc2',
-        },
-        createdOn: {
-          seconds: 1727050415,
-          nanoseconds: 860000000,
-        },
-        title: 'test',
-        id: '9hoAIqsGE3MvWL8z4u2h',
-      },
-      {
-        createdOn: {
-          seconds: 1727041165,
-          nanoseconds: 239000000,
-        },
-        title: 'Network error',
-        desc: 'No internet',
-        priority: 0,
-        assigned: {
-          email: 'jogasy.rabefialy@gmail.com',
-          level: 3,
-          fullname: 'jonathan rabefialy',
-        },
-        id: 'achgpHkpHdrMdO1ZgkS4',
-      },
-    ]) as any;
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should fetch tickets on init', () => {
+    const mockTickets = [{ id: '1', title: 'Test Ticket', priority: 0 }];
+    ticketsService.getTickets.mockReturnValue(of(mockTickets));
+
+    component.ngOnInit();
+
+    expect(ticketsService.getTickets).toHaveBeenCalled();
+    expect(component.dataSource).toBeInstanceOf(MatTableDataSource);
+    expect(component.dataSource.data).toEqual(mockTickets);
+  });
+
+  it('should filter tickets based on input', () => {
+    const mockEvent = { target: { value: 'test' } } as unknown as Event;
+    component.dataSource = new MatTableDataSource([
+      { id: '1', title: 'Test Ticket' },
+      { id: '2', title: 'Another Ticket' },
+    ]);
+
+    component.applyFilter(mockEvent);
+
+    expect(component.dataSource.filter).toBe('test');
+  });
+
+  it('should unsubscribe on destroy', () => {
+    const unsubscribeSpy = jest.spyOn(component['unsubscribe$'], 'next');
+    const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

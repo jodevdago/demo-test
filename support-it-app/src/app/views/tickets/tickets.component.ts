@@ -75,7 +75,7 @@ export class TicketsComponent implements OnInit, OnDestroy {
     'createdOn',
     'status'
   ];
-  dataSource!: MatTableDataSource<Ticket[]>;
+  dataSource!: MatTableDataSource<any>;
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElement: Ticket | null = null;
 

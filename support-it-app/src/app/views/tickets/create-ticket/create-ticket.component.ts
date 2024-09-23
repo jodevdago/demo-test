@@ -52,27 +52,38 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<CreateTicketComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    // this.usersService.getUsers().subscribe(x => {
+    //   this.options = x;
+    // });
+
+    // if (this.data) {
+    //   this.form = this.fb.group({
+    //     desc: [this.data.desc, Validators.required],
+    //     priority: [this.data.priority, Validators.required],
+    //     title: [this.data.title, Validators.required],
+    //     assigned: [this.data.assigned, Validators.required],
+    //     status: [this.data.status, Validators.required]
+    //   });
+    // } else {
+    //   this.form = this.fb.group({
+    //     desc: ['', Validators.required],
+    //     priority: [0, Validators.required],
+    //     title: ['', Validators.required],
+    //     assigned: [{}, Validators.required],
+    //     status: ['PENDING']
+    //   });
+    // }
+    this.form = this.fb.group({
+      desc: [data?.desc || '', Validators.required],
+      priority: [data?.priority || 0, Validators.required],
+      title: [data?.title || '', Validators.required],
+      assigned: [data?.assigned || {}, Validators.required],
+      status: [data?.status || 'PENDING', Validators.required],
+    });
+
     this.usersService.getUsers().subscribe(x => {
       this.options = x;
     });
-
-    if (this.data) {
-      this.form = this.fb.group({
-        desc: [this.data.desc, Validators.required],
-        priority: [this.data.priority, Validators.required],
-        title: [this.data.title, Validators.required],
-        assigned: [this.data.assigned, Validators.required],
-        status: [this.data.status, Validators.required]
-      });
-    } else {
-      this.form = this.fb.group({
-        desc: ['', Validators.required],
-        priority: [0, Validators.required],
-        title: ['', Validators.required],
-        assigned: [{}, Validators.required],
-        status: ['PENDING']
-      });
-    }
   }
 
   ngOnInit(): void {
