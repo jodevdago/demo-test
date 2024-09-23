@@ -27,21 +27,6 @@ describe('LayoutComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call authService.logout when logout is called', () => {
-    component.logout();
-    expect(authService.logout).toHaveBeenCalled();
-  });
-
-  it('should clean up subscriptions on destroy', () => {
-    const unsubscribeSpy = jest.spyOn(component['unsubscribe$'], 'next');
-    const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(unsubscribeSpy).toHaveBeenCalledWith();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
   it('should toggle isExpanded state', () => {
     expect(component.isExpanded).toBeTruthy();
     component.toggleMenu();

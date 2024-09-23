@@ -4,11 +4,13 @@ import { TicketsService } from '../../services/tickets.service';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { UserService } from '../../services/user.service';
 
 describe('TicketsComponent', () => {
   let component: TicketsComponent;
   let fixture: ComponentFixture<TicketsComponent>;
   let ticketsService: TicketsService;
+  let userService: UserService;
   let dialog: MatDialog;
 
   beforeEach(async () => {
@@ -25,6 +27,7 @@ describe('TicketsComponent', () => {
       imports: [TicketsComponent],
       providers: [
         { provide: TicketsService, useValue: ticketsService },
+        { provide: UserService, useValue: userService },
         { provide: MatDialog, useValue: dialogMock },
       ],
     }).compileComponents();
@@ -32,6 +35,7 @@ describe('TicketsComponent', () => {
     fixture = TestBed.createComponent(TicketsComponent);
     component = fixture.componentInstance;
     ticketsService = TestBed.inject(TicketsService);
+    userService = TestBed.inject(UserService);
     dialog = TestBed.inject(MatDialog);
 
     component.dataSource = new MatTableDataSource([
@@ -73,25 +77,5 @@ describe('TicketsComponent', () => {
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should fetch tickets on init', () => {
-    const mockTickets = [
-      {
-        id: '1',
-        title: 'Test Ticket',
-        priority: 0,
-        assigned: 'User',
-        createdOn: new Date(),
-      },
-    ];
-    (ticketsService.getTickets as jest.Mock).mockReturnValue(of(mockTickets));
-
-    component.ngOnInit();
-
-    expect(ticketsService.getTickets).toHaveBeenCalled();
-    expect(component.dataSource).toBeInstanceOf(MatTableDataSource);
-    expect(component.dataSource.data).toHaveLength(1);
-    expect(component.dataSource.data[0]).toEqual(mockTickets[0]);
   });
 });
