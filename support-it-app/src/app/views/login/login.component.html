@@ -124,6 +124,9 @@
                 hideConfirmPassword() ? "visibility_off" : "visibility"
               }}</mat-icon>
             </button>
+            @if (registrationForm.errors?.['mismatch']) {
+              <mat-error>Passwords do not match.</mat-error>
+            }
           </mat-form-field>
         </div>
         <div>

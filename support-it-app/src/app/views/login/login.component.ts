@@ -81,14 +81,18 @@ export class LoginComponent implements OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registrationForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       level: [1, Validators.required],
       fullname: ['', Validators.required],
-    });
+    }, { validator: this.passwordMatchValidator });
 
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
@@ -165,23 +169,32 @@ export class LoginComponent implements OnDestroy {
   }
 
   login(): void {
-    this.authService.login(
-      this.loginForm.get('email')?.value,
-      this.loginForm.get('password')?.value
-    ).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: () => {
-        this.router.navigate(['./layout']);
-      },
-      error: (err) => {
-        this.errorLoginMessage = err.code;
-        timer(3000)
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(() => {
-            this.errorLoginMessage = '';
-          });
-      },
-    });
+    this.authService
+      .login(
+        this.loginForm.get('email')?.value,
+        this.loginForm.get('password')?.value
+      )
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['./layout']);
+        },
+        error: (err) => {
+          this.errorLoginMessage = err.code;
+          timer(3000)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              this.errorLoginMessage = '';
+            });
+        },
+      });
+  }
+
+  passwordMatchValidator(form: FormGroup): {
+    mismatch: boolean;
+  } | null {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null
+      : { mismatch: true };
   }
 }
