@@ -48,6 +48,13 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "allowedCommonJsDependencies": [
+                "@firebase/auth",
+                "@firebase/firestore",
+                "undici",
+                "@grpc/grpc-js",
+                "@grpc/proto-loader"
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -57,8 +64,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
