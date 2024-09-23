@@ -96,9 +96,11 @@
               {{ element.desc }}
             </div>
             <div class="ms-5">
-              <button mat-button (click)="onClickEdit()">
+              <button mat-icon-button type="button" (click)="onClickCreate(element)">
                 <mat-icon>edit</mat-icon>
-                Edit
+              </button>
+              <button mat-icon-button type="button" (click)="onDeleteTicket(element.id)">
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>

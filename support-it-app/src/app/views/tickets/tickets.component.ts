@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -12,10 +18,17 @@ import { Ticket } from '../../types/ticket';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { FirestoreTimestampToDatePipe } from "../../pipes/firestore-timestamp-to-date.pipe";
-import { MatCardModule } from '@angular/material/card';
+import { FirestoreTimestampToDatePipe } from '../../pipes/firestore-timestamp-to-date.pipe';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CreateTicketComponent } from './create-ticket/create-ticket.component';
 
 @Component({
   selector: 'app-tickets',
@@ -30,14 +43,18 @@ import { MatCardModule } from '@angular/material/card';
     MatPaginatorModule,
     CommonModule,
     FirestoreTimestampToDatePipe,
-],
+    MatDialogModule,
+  ],
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.scss',
   animations: [
     trigger('detailExpand', [
-      state('collapsed,void', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
     ]),
   ],
   providers: [
@@ -46,6 +63,7 @@ import { MatCardModule } from '@angular/material/card';
       useValue: { appearance: 'outline' },
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TicketsComponent implements OnInit, OnDestroy {
   columnsToDisplay: string[] = [
@@ -53,7 +71,7 @@ export class TicketsComponent implements OnInit, OnDestroy {
     'title',
     'priority',
     'assigned',
-    'createdOn'
+    'createdOn',
   ];
   dataSource!: MatTableDataSource<Ticket[]>;
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
@@ -64,7 +82,10 @@ export class TicketsComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private service: TicketsService) {}
+  constructor(
+    private service: TicketsService,
+    public createDialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.service
@@ -91,7 +112,25 @@ export class TicketsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickCreate(): void {}
+  onClickCreate(data?: any): void {
+    const dialogRef = this.createDialog.open(CreateTicketComponent, {
+      width: '500px',
+      height: '500px',
+      data: data
+    });
+
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
+  }
 
   onClickEdit(): void {}
+
+  onDeleteTicket(id: string): void {
+    this.service.deleteDocument(id).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(x => {
+      console.log(x);
+    })
+  }
 }
