@@ -5,6 +5,8 @@ import {
   collectionData,
   deleteDoc,
   doc,
+  DocumentData,
+  DocumentReference,
   Firestore,
   updateDoc,
 } from '@angular/fire/firestore';
@@ -21,9 +23,9 @@ export class TicketsService {
     return collectionData(usersCollection, { idField: 'id' });
   }
 
-  createDocument(data: any) {
-    const usersCollection = collection(this.firestore, 'tickets');
-    return from(addDoc(usersCollection, data));
+  createDocument(data: any): Observable<DocumentReference<any, DocumentData>> {
+    const ticketsCollection = collection(this.firestore, 'tickets');
+    return from(addDoc(ticketsCollection, data));
   }
 
   deleteDocument(id: string): Observable<void> {

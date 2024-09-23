@@ -6,12 +6,14 @@ import {
   Firestore,
   updateDoc,
 } from '@angular/fire/firestore';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  userConnected$ = new BehaviorSubject<any>({});
+
   constructor(private firestore: Firestore) {}
 
   getUsers(): Observable<any[]> {

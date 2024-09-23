@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { TicketsService } from '../../../services/tickets.service';
 import { map, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-create-ticket',
@@ -31,6 +32,7 @@ import { map, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
     MatAutocompleteModule,
     CommonModule,
     ReactiveFormsModule,
+    MatDividerModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-ticket.component.html',
@@ -60,6 +62,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         priority: [this.data.priority, Validators.required],
         title: [this.data.title, Validators.required],
         assigned: [this.data.assigned, Validators.required],
+        status: [this.data.status, Validators.required]
       });
     } else {
       this.form = this.fb.group({
@@ -67,6 +70,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         priority: [0, Validators.required],
         title: ['', Validators.required],
         assigned: [{}, Validators.required],
+        status: ['PENDING']
       });
     }
   }
@@ -79,6 +83,18 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         return name ? this._filter(name as string) : this.options.slice();
       }),
     )
+
+    this.usersService.userConnected$.subscribe(x => {
+      if (x.role == 0) {
+        this.form.enable();
+      } else {
+        this.form.get('desc')?.disable();
+        this.form.get('priority')?.disable();
+        this.form.get('title')?.disable();
+        this.form.get('assigned')?.disable();
+        this.form.get('status')?.enable();
+      }
+    })
   }
 
   ngOnDestroy(): void {

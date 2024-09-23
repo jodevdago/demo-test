@@ -9,4 +9,5 @@ export interface Ticket {
     fullname: string;
   };
   id?: string;
+  status: 'INPROGRESS' | 'PENDING' | 'FINISHED' | 'CLOSED';
 }

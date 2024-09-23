@@ -3,7 +3,7 @@ import { LoginComponent } from './views/login/login.component';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UnauthorizedComponent } from './layouts/unauthorized/unauthorized.component';
-import { UsersComponent } from './views/users/users.component';
+import { userGuard } from './guards/user.guard';
 
 export const routes: Routes = [
   {
@@ -24,17 +24,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'users',
-        loadComponent: () => import('./views/users/users.component').then(m => m.UsersComponent)
-      },
-      {
         path: '',
-        loadComponent: () => import('./views/users/users.component').then(m => m.UsersComponent)
+        loadComponent: () => import('./views/tickets/tickets.component').then(m => m.TicketsComponent),
       },
       {
         path: 'tickets',
         loadComponent: () => import('./views/tickets/tickets.component').then(m => m.TicketsComponent)
-      }
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./views/users/users.component').then(m => m.UsersComponent),
+        canActivate: [userGuard]
+      },
     ]
   },
   {

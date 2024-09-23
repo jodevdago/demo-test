@@ -1,5 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="create()">
-  <mat-dialog-content>
+  <!-- <mat-dialog-content> -->
+  <div class="p-6">
     <h6>Create a ticket</h6>
     <mat-form-field
       appearance="outline"
@@ -37,11 +38,23 @@
       <mat-label>Description</mat-label>
       <textarea matInput rows="5" formControlName="desc"></textarea>
     </mat-form-field>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close>Cancel</button>
-    <button mat-button [disabled]="!form.valid" type="submit">
-      @if (data) { Edit } @else { Create }
-    </button>
-  </mat-dialog-actions>
+    <div>
+      <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="PENDING">Pending</mat-option>
+          <mat-option value="INPROGRESS">In progress</mat-option>
+          <mat-option value="FINISHED">Finished</mat-option>
+          <mat-option value="CLOSED">Closed</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="flex justify-end items-center mt-8">
+      <button mat-button type="button" mat-dialog-close>Cancel</button>
+      <button mat-button [disabled]="!form.valid" type="submit">
+        @if (data) { Edit } @else { Create }
+      </button>
+    </div>
+  </div>
 </form>

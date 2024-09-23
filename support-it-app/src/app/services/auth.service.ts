@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  UserCredential,
+} from 'firebase/auth';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 import { User } from '../types/user';
 import { from, Observable } from 'rxjs';
@@ -9,7 +14,6 @@ import { from, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-
   constructor(private firebaseAuth: Auth, private firestore: Firestore) {}
 
   register(

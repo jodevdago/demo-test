@@ -29,6 +29,7 @@ import { CommonModule } from '@angular/common';
 import { FirestoreTimestampToDatePipe } from '../../pipes/firestore-timestamp-to-date.pipe';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CreateTicketComponent } from './create-ticket/create-ticket.component';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-tickets',
@@ -72,6 +73,7 @@ export class TicketsComponent implements OnInit, OnDestroy {
     'priority',
     'assigned',
     'createdOn',
+    'status'
   ];
   dataSource!: MatTableDataSource<Ticket[]>;
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
@@ -80,12 +82,16 @@ export class TicketsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
 
+  user$;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
     private service: TicketsService,
-    public createDialog: MatDialog
-  ) {}
+    public createDialog: MatDialog,
+    private userService: UserService
+  ) {
+    this.user$ = this.userService.userConnected$;
+  }
 
   ngOnInit(): void {
     this.service
@@ -115,16 +121,10 @@ export class TicketsComponent implements OnInit, OnDestroy {
   onClickCreate(data?: any): void {
     const dialogRef = this.createDialog.open(CreateTicketComponent, {
       width: '500px',
-      height: '500px',
+      height: '600px',
       data: data
     });
-
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
   }
-
-  onClickEdit(): void {}
 
   onDeleteTicket(id: string): void {
     this.service.deleteDocument(id).pipe(
