@@ -3,9 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TicketsComponent } from './tickets.component';
 import { TicketsService } from '../../services/tickets.service';
 import { UserService } from '../../services/user.service';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { CreateTicketComponent } from './create-ticket/create-ticket.component';
 
 describe('TicketsComponent', () => {
   let component: TicketsComponent;
