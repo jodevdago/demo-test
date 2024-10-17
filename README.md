@@ -24,7 +24,6 @@ Before running the app locally, please check the version of Angular in `package.
 Only two admin accounts exist in the app. You can log in with the following credentials:
 
 1. Admin 1: jogasy.rabefialy@gmail.com, Password: admin@admin
-2. Admin 2: tantely.ramananarivo09@gmail.com, Password: admin@tantely
 
 ## App 
 this app in available to https://it-support-test.vercel.app/
