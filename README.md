@@ -1,4 +1,4 @@
-# novity-test
+# demo-test
 
 ## Unit Testing
 This project uses Jest for unit testing. You can run the tests using the following commands:
