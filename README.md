@@ -21,7 +21,7 @@ Before running the app locally, please check the version of Angular in `package.
    npm run build
 
 ## Admin Accounts
-Only two admin accounts exist in the app. You can log in with the following credentials:
+Only one admin accounts exist in the app. You can log in with the following credentials:
 
 1. Admin 1: jogasy.rabefialy@gmail.com, Password: admin@admin
 
