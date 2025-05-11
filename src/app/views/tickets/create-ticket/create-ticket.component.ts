@@ -1,5 +1,5 @@
 import { UserService } from './../../../services/user.service';
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, Inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,9 +15,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TicketsService } from '../../../services/tickets.service';
-import { map, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
+import { map, Observable, of, startWith } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TicketsService } from '../../../services/tickets.service';
 
 @Component({
   selector: 'app-create-ticket',
@@ -38,19 +39,18 @@ import { MatDividerModule } from '@angular/material/divider';
   templateUrl: './create-ticket.component.html',
   styleUrl: './create-ticket.component.scss',
 })
-export class CreateTicketComponent implements OnInit, OnDestroy {
+export class CreateTicketComponent implements OnInit {
   options: any[] = [];
   users$: Observable<any[]> = of([]);
   form: FormGroup;
-
-  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private usersService: UserService,
     private ticketService: TicketsService,
     private dialogRef: MatDialogRef<CreateTicketComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private destroyRef: DestroyRef,
   ) {
     this.form = this.fb.group({
       desc: [data?.desc || '', Validators.required],
@@ -60,13 +60,16 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       status: [data?.status || 'PENDING', Validators.required],
     });
 
-    this.usersService.getUsers().subscribe(x => {
+    this.usersService.getUsers().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(x => {
       this.options = x;
     });
   }
 
   ngOnInit(): void {
     this.users$ = this.form.get('assigned')!.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
       startWith(''),
       map(value => {
         const name = typeof value === 'string' ? value : value?.fullname;
@@ -74,7 +77,9 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       }),
     )
 
-    this.usersService.userConnected$.subscribe(x => {
+    this.usersService.userConnected$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(x => {
       if (x.role == 0) {
         this.form.enable();
       } else {
@@ -85,11 +90,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         this.form.get('status')?.enable();
       }
     })
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   displayFn(user: User): string {
@@ -103,7 +103,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     };
     if (this.data) {
       this.ticketService.updateDocument(this.data.id, formdata).pipe(
-        takeUntil(this.unsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       ).subscribe(x => {
         this.form.patchValue({
           desc: '',
@@ -115,17 +115,17 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       })
     } else {
       this.ticketService
-      .createDocument(formdata)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((x) => {
-        this.form.patchValue({
-          desc: '',
-          priority: 0,
-          title: '',
-          assigned: {},
+        .createDocument(formdata)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((x) => {
+          this.form.patchValue({
+            desc: '',
+            priority: 0,
+            title: '',
+            assigned: {},
+          });
+          this.dialogRef.close();
         });
-        this.dialogRef.close();
-      });
     }
   }
 

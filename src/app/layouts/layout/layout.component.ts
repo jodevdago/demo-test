@@ -1,10 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { Subject } from 'rxjs';
+import { Component } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { SidenavComponent } from '../sidenav/sidenav.component';
-import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-layout',

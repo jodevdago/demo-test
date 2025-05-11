@@ -14,7 +14,7 @@
   </div>
 
 
-  @for (route of routeLinks; track $index) {
+  @for (route of (user$ | async).role == 0 ? routeLinksAdmin : routeLinks; track $index) {
     <mat-list class="nav m-0 p-0">
       <a
         mat-list-item

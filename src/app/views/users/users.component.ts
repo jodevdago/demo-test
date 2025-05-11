@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild } from '@angular/core';
 import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormFieldModule,
@@ -9,9 +9,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { UserService } from '../../services/user.service';
-import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../types/user';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-users',
@@ -34,31 +34,24 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     },
   ],
 })
-export class UsersComponent implements OnInit, OnDestroy {
+export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['id', 'email', 'fullname', 'level', 'role', 'auth'];
   dataSource!: MatTableDataSource<User[]>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
 
-  private unsubscribe$ = new Subject<void>();
-
-  constructor(private service: UserService) {}
+  constructor(private service: UserService, private destroyRef: DestroyRef) {}
 
   ngOnInit(): void {
     this.service
       .getUsers()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((users) => {
         this.dataSource = new MatTableDataSource(users);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   applyFilter(event: Event): void {
@@ -74,7 +67,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     const id = <string> row.id;
     const auth = !row.auth;
     this.service.updateUserField(id, auth).pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe();
   }
 }

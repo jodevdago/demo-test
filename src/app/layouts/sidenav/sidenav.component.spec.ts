@@ -72,11 +72,19 @@ describe('SidenavComponent', () => {
     expect(mockAuthService.logout).toHaveBeenCalled();
   });
 
-  // Test that the routeLinks are initialized correctly
+  // Test that the routeLinks are initialized correctly if the user is an admin
   it('should have correct routeLinks', () => {
     const expectedLinks = [
       { link: './tickets', name: 'Tickets', icon: 'view_agenda' },
       { link: './users', name: 'Users', icon: 'supervised_user_circle' },
+    ];
+    expect(component.routeLinksAdmin).toEqual(expectedLinks);
+  });
+
+  // Test that the routeLinks are initialized correctly if the user is not an admin
+  it('should have correct routeLinks', () => {
+    const expectedLinks = [
+      { link: './tickets', name: 'Tickets', icon: 'view_agenda' },
     ];
     expect(component.routeLinks).toEqual(expectedLinks);
   });
