@@ -8,9 +8,12 @@ import {
   DocumentData,
   DocumentReference,
   Firestore,
+  query,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
+import { Ticket } from '../types/ticket';
 
 @Injectable({
   providedIn: 'root',
@@ -36,5 +39,11 @@ export class TicketsService {
   updateDocument(userId: string, data: any): Observable<void> {
     const userDocRef = doc(this.firestore, `tickets/${userId}`);
     return from(updateDoc(userDocRef, data));
+  }
+
+  getTicketsByAssignedFullname(fullname: string[]): Observable<Ticket[]> {
+    const ticketsRef = collection(this.firestore, 'tickets');
+    const q = query(ticketsRef, where('assigned.fullname', 'in', fullname));
+    return collectionData(q, { idField: 'id' }) as Observable<Ticket[]>;
   }
 }

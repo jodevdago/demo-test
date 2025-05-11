@@ -2,7 +2,7 @@ export interface Ticket {
   desc: string;
   priority: number;
   title: string;
-  createdOn: Date;
+  createdOn: Date | any;
   assigned: {
     level: number;
     email: string;

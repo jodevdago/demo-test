@@ -1,6 +1,21 @@
 table {
   width: 100%;
+  background: #ffffff;
 }
+
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+mat-button-toggle-group {
+  min-width: 120px;
+  flex-shrink: 0; 
+}
+
 
 tr.example-detail-row {
   height: 0;
@@ -11,7 +26,7 @@ tr.example-element-row:not(.example-expanded-row):hover {
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  background: #efefef;
+  background: whitesmoke;
 }
 
 .example-element-description {
@@ -70,4 +85,64 @@ tr.example-element-row:not(.example-expanded-row):active {
     color: #065b00;
   }
 
+}
+
+.board {
+  display: flex;
+  gap: 1rem;
+}
+
+.board-title {
+  font-size: medium;
+  color: #005cbb;
+}
+
+.column {
+  width: 85%;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.ticket-list {
+  min-height: 300px;
+  // border: 2px dashed #ccc;
+  padding: 0.02rem;
+  border-radius: 15px;
+}
+
+.ticket {
+  background-color: white;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  cursor: grab;
+  z-index: 1000;
+
+  /* Ajout d'une ombre douce */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.ticket:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  /* Effet accentué au clic */
+}
+
+
+.avatar {
+  margin-top: 7.5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #b3c8fa;
+  /* Couleur de fond */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  font-family: sans-serif;
 }

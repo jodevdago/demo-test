@@ -3,3 +3,13 @@
   box-sizing: border-box;
   padding: 25px;
 }
+
+
+mat-sidenav-content {
+  overflow: auto;
+  height: 100%;
+}
+
+mat-sidenav-container {
+  height: 100vh;
+}

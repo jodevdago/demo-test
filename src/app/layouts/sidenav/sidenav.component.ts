@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -29,9 +29,13 @@ export class SidenavComponent {
 
   user$ = this.userService.userConnected$;
 
-  routeLinks = [
+  routeLinksAdmin = [
     { link: './tickets', name: 'Tickets', icon: 'view_agenda' },
     { link: './users', name: 'Users', icon: 'supervised_user_circle' },
+  ];
+
+  routeLinks = [
+    { link: './tickets', name: 'Tickets', icon: 'view_agenda' },
   ];
 
   logout(): void {

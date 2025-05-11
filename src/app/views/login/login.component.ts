@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, DestroyRef, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,8 +22,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Subject, takeUntil, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -68,7 +69,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   hidePassword = signal(true);
   hideConfirmPassword = signal(true);
   isSignUpMode = signal(false);
@@ -79,12 +80,11 @@ export class LoginComponent implements OnDestroy {
   errorRegistrationMessage: string | null = null;
   errorLoginMessage: string | null = null;
 
-  private unsubscribe$ = new Subject<void>();
-
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef,
   ) {
     this.registrationForm = this.fb.group({
       email: ['', Validators.required],
@@ -98,11 +98,6 @@ export class LoginComponent implements OnDestroy {
       email: ['', Validators.required],
       password: ['', Validators.required],
     });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   clickEvent(event: MouseEvent, hidePassword: boolean): void {
@@ -152,7 +147,7 @@ export class LoginComponent implements OnDestroy {
         this.registrationForm.get('password')?.value,
         this.registrationForm.get('level')?.value
       )
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.onLogin();
@@ -160,7 +155,7 @@ export class LoginComponent implements OnDestroy {
         error: (err) => {
           this.errorRegistrationMessage = err.code;
           timer(3000)
-            .pipe(takeUntil(this.unsubscribe$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.errorRegistrationMessage = '';
             });
@@ -174,7 +169,7 @@ export class LoginComponent implements OnDestroy {
         this.loginForm.get('email')?.value,
         this.loginForm.get('password')?.value
       )
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.router.navigate(['./layout']);
@@ -182,7 +177,7 @@ export class LoginComponent implements OnDestroy {
         error: (err) => {
           this.errorLoginMessage = err.code;
           timer(3000)
-            .pipe(takeUntil(this.unsubscribe$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.errorLoginMessage = '';
             });
