@@ -116,7 +116,6 @@ export class TicketsComponent implements OnInit {
     private service: TicketsService,
     public createDialog: MatDialog,
     private userService: UserService,
-    private ticketService: TicketsService,
     private destroyRef: DestroyRef,
   ) {
     this.user$ = this.userService.userConnected$;
@@ -128,7 +127,7 @@ export class TicketsComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
       switchMap(users => {
         if (users && users.length > 0) {
-          return this.ticketService.getTicketsByAssignedFullname([...users]);
+          return this.service.getTicketsByAssignedFullname([...users]);
         } else {
           return this.service.getTickets();
         }
@@ -183,7 +182,7 @@ export class TicketsComponent implements OnInit {
       // 🔥 Update Firestore
       const ticketId = ticket.id ? ticket.id : null;
       if (ticketId) {
-        this.ticketService.updateDocument(ticketId, ticket).pipe(
+        this.service.updateDocument(ticketId, ticket).pipe(
           takeUntilDestroyed(this.destroyRef)
         ).subscribe(() => {
           this.tickets.set([...this.tickets()]);

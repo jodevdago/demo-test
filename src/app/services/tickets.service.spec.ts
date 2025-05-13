@@ -9,6 +9,8 @@ import {
   doc,
   updateDoc,
   collectionData,
+  query,
+  where
 } from '@angular/fire/firestore';
 
 jest.mock('@angular/fire/firestore');
@@ -83,4 +85,30 @@ describe('TicketsService', () => {
     });
     expect(collection).toHaveBeenCalledWith(firestore, 'tickets');
   });
+
+    it('should get tickets by assigned fullname', (done) => {
+    const mockFullnames = ['John Doe', 'Jane Smith'];
+    const mockTickets = [
+      { id: '1', assigned: { fullname: 'John Doe' }, title: 'Ticket 1' },
+      { id: '2', assigned: { fullname: 'Jane Smith' }, title: 'Ticket 2' },
+    ];
+
+    const mockCollectionRef = {};
+    const mockQuery = {};
+
+    (collection as jest.Mock).mockReturnValue(mockCollectionRef);
+    (query as jest.Mock).mockReturnValue(mockQuery);
+    (where as jest.Mock).mockImplementation(() => 'whereCondition'); // not really used, just mocked
+    (collectionData as jest.Mock).mockReturnValue(from([mockTickets]));
+
+    service.getTicketsByAssignedFullname(mockFullnames).subscribe((tickets) => {
+      expect(tickets).toEqual(mockTickets);
+      expect(collection).toHaveBeenCalledWith(firestore, 'tickets');
+      expect(where).toHaveBeenCalledWith('assigned.fullname', 'in', mockFullnames);
+      expect(query).toHaveBeenCalledWith(mockCollectionRef, 'whereCondition');
+      expect(collectionData).toHaveBeenCalledWith(mockQuery, { idField: 'id' });
+      done();
+    });
+  });
+
 });
