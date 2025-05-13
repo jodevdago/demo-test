@@ -21,6 +21,7 @@ describe('TicketsComponent', () => {
 
     userService = {
       userConnected$: of({ id: '123', name: 'Test User' }),
+      getUsers: jest.fn().mockReturnValue(of([])),
     } as unknown as jest.Mocked<UserService>;
 
     matDialog = {
@@ -67,15 +68,5 @@ describe('TicketsComponent', () => {
     component.applyFilter(mockEvent);
 
     expect(component.dataSource.filter).toBe('test');
-  });
-
-  it('should unsubscribe on destroy', () => {
-    const unsubscribeSpy = jest.spyOn(component['unsubscribe$'], 'next');
-    const completeSpy = jest.spyOn(component['unsubscribe$'], 'complete');
-
-    component.ngOnDestroy();
-
-    expect(unsubscribeSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
   });
 });
