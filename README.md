@@ -24,9 +24,10 @@ Before running the app locally, please check the version of Angular in `package.
 To run the app using Docker, follow these steps:
 
 1. Build the Docker image and start the container:
+   ```bash
    docker-compose up --build
 
-2. Access the app in your browser at http://localhost:8080
+3. Access the app in your browser at http://localhost:8080
 
 ## Admin Accounts
 Only one admin accounts exist in the app. You can log in with the following credentials:
