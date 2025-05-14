@@ -1,7 +1,21 @@
 services:
-  angular-app:
+  angular-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app         # Monte le répertoire local dans le conteneur
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+
+  angular-prod:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:80"
+
