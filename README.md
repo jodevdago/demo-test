@@ -1,38 +1,92 @@
+
 # demo-test
 
-## Unit Testing
-This project uses Jest for unit testing. You can run the tests using the following commands:
-- To run tests: `npm run test`
-- To check test coverage: `npm run test:coverage`
+## 🧪 Unit Testing
 
-## Setup Instructions
-Before running the app locally, please check the version of Angular in `package.json`. The current version is v18, and you should also install Node.js LTS.
+This project uses **Jest** for unit testing.
 
-1. After installing Node.js and Angular, run the following command to install all dependencies listed in `package.json`:
+### Commands
+
+- Run tests:
+  ```bash
+  npm run test
+  ```
+
+- Check test coverage:
+  ```bash
+  npm run test:coverage
+  ```
+
+---
+
+## ⚙️ Local Setup
+
+Before running the app locally, ensure you're using **Angular v18** and a **Node.js LTS** version (recommended: Node.js ≥ 18.x).
+
+### Steps
+
+1. Install dependencies:
    ```bash
    npm install
+   ```
 
-2. Run app :
+2. Start the app in development mode:
    ```bash
    npm start
+   ```
 
-3. Build app :
+3. Build the app for production:
    ```bash
    npm run build
+   ```
 
-## Docker Setup
-To run the app using Docker, follow these steps:
+---
 
-1. Build the Docker image and start the container:
-   ```bash
-   docker-compose up --build
+## 🐳 Docker Usage
 
-3. Access the app in your browser at http://localhost:8080
+This project supports two Docker modes: **development** and **production**.
 
-## Admin Accounts
-Only one admin accounts exist in the app. You can log in with the following credentials:
+### 🔧 Development Mode
 
-1. Admin 1: jogasy.rabefialy@gmail.com, Password: Jogasy@admin
+Run the app in development mode with hot reload:
 
-## App 
-this app in available to https://it-support-test.vercel.app/
+```bash
+docker compose up --build angular-dev
+```
+
+- Access the app at: [http://localhost:4200](http://localhost:4200)
+
+This mode is ideal during development, as it mounts the local source code and enables live reloading.
+
+---
+
+### 🚀 Production Mode
+
+Build and run the app in production mode:
+
+```bash
+docker compose up --build angular-prod
+```
+
+- Access the app at: [http://localhost:8080](http://localhost:8080)
+
+This mode serves the optimized production build using NGINX.
+
+---
+
+## 🔐 Admin Access
+
+A single admin account is available for demo/testing purposes:
+
+- **Email**: jogasy.rabefialy@gmail.com  
+- **Password**: Jogasy@admin
+
+---
+
+## 🌐 Live Demo
+
+You can try the app online at:
+
+👉 [https://it-support-test.vercel.app/](https://it-support-test.vercel.app/)
+
+---
